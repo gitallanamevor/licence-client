@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licensing.zithis.example/protocol/v1/deactivate-response.schema.json",
+  "title": "deactivate response",
+  "oneOf": [
+    {
+      "$ref": "common.schema.json#/$defs/signedEnvelope"
+    },
+    {
+      "$ref": "common.schema.json#/$defs/errorEnvelope"
+    }
+  ]
+}

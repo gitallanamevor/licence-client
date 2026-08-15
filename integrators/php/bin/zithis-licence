@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Zithis\LicenceClient\Integrator\Php\ApplicationRuntime;
+use Zithis\LicenceClient\Integrator\Php\Console\ConsoleApplication;
+
+$bootstrap = trim((string) ($argv[1] ?? ''));
+if ($bootstrap === '' || !is_file($bootstrap)) {
+    fwrite(STDERR, "Usage: zithis-licence /absolute/path/licence-bootstrap.php <command> [arguments]\n");
+    exit(2);
+}
+$runtime = require $bootstrap;
+if (!$runtime instanceof ApplicationRuntime) {
+    fwrite(STDERR, "The licence bootstrap must return an ApplicationRuntime instance.\n");
+    exit(2);
+}
+try {
+    exit((new ConsoleApplication())->run($runtime, array_slice($argv, 2)));
+} catch (Throwable $exception) {
+    fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+    exit(1);
+}

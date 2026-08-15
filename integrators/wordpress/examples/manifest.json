@@ -1,0 +1,36 @@
+{
+  "contract_version": 2,
+  "product": {
+    "code": "vendor-plugin",
+    "name": "Vendor Plugin",
+    "package_identifier": "vendor-plugin/vendor-plugin.php",
+    "homepage": "https://example.com/vendor-plugin",
+    "minimum_php": "8.1",
+    "minimum_wordpress": "6.5",
+    "tested_wordpress": "6.8"
+  },
+  "namespace": "Vendor\\Plugin\\Internal\\ZithisLicence",
+  "authority": {
+    "id": "zithis-production",
+    "key_id": "release-signing-1",
+    "public_key_file": "../../../protocol/fixtures/v1/authority/test-authority-public.pem",
+    "allow_private_network": false,
+    "package_download_hosts": [
+      "licence.example.com"
+    ],
+    "endpoints": {
+      "activate": "https://licence.example.com/v1/licences/activate",
+      "validate": "https://licence.example.com/v1/licences/validate",
+      "deactivate": "https://licence.example.com/v1/licences/deactivate",
+      "update_check": "https://licence.example.com/v1/updates/check",
+      "package_authorisation": "https://licence.example.com/v1/updates/authorize-package"
+    }
+  },
+  "runtime": {
+    "timeout": 30,
+    "validation_retry_seconds": 21600,
+    "update_check_seconds": 43200,
+    "lock_seconds": 300,
+    "admin_capability": "manage_options"
+  }
+}

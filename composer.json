@@ -1,0 +1,50 @@
+{
+  "name": "zithis/licence-client",
+  "description": "Framework-independent, product-neutral PHP licence client and runtime integrators for Zithis LicenceServer.",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "licensing",
+    "licence",
+    "license",
+    "php",
+    "software-licensing",
+    "wordpress"
+  ],
+  "homepage": "https://github.com/gitallanamevor/licence-client",
+  "support": {
+    "issues": "https://github.com/gitallanamevor/licence-client/issues",
+    "source": "https://github.com/gitallanamevor/licence-client"
+  },
+  "require": {
+    "php": "^8.1",
+    "ext-json": "*",
+    "ext-openssl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zithis\\LicenceClient\\": "src/",
+      "Zithis\\LicenceClient\\Integrator\\Php\\": "integrators/php/src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Zithis\\LicenceClient\\Tests\\": "tests/",
+      "Zithis\\StandaloneWordPressIntegrator\\": "integrators/wordpress/src/"
+    }
+  },
+  "bin": [
+    "integrators/php/bin/zithis-licence"
+  ],
+  "scripts": {
+    "test": "php tools/test.php",
+    "verify-protocol": "php tools/protocol-verify.php",
+    "verify-security": "php tools/security-verify.php",
+    "verify": [
+      "@test",
+      "@verify-protocol",
+      "@verify-security"
+    ],
+    "build-wordpress-integrator": "php tools/build-wordpress-integrator.php"
+  }
+}

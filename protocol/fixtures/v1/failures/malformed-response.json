@@ -1,0 +1,7 @@
+{
+  "http_status": 200,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"protocol_version\":\"1.0\",\"signed_payload\":"
+}

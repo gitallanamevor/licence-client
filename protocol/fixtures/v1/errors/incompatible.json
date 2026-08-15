@@ -1,0 +1,9 @@
+{
+  "protocol_version": "1.0",
+  "error": {
+    "code": "unsupported_protocol_version",
+    "category": "compatibility",
+    "retryable": false,
+    "request_id": "22222222-2222-4222-8222-222222222299"
+  }
+}

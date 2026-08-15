@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licensing.zithis.example/protocol/v1/package-authorisation-request.schema.json",
+  "title": "package-authorisation request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "client",
+    "product",
+    "installation",
+    "operation",
+    "credential"
+  ],
+  "properties": {
+    "protocol": {
+      "$ref": "common.schema.json#/$defs/protocol"
+    },
+    "client": {
+      "$ref": "common.schema.json#/$defs/client"
+    },
+    "product": {
+      "$ref": "common.schema.json#/$defs/product"
+    },
+    "installation": {
+      "$ref": "common.schema.json#/$defs/installation"
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "parameters"
+      ],
+      "properties": {
+        "name": {
+          "const": "package_authorisation"
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "release_id",
+            "version",
+            "checksum_algorithm",
+            "checksum"
+          ],
+          "properties": {
+            "release_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "checksum_algorithm": {
+              "const": "sha256"
+            },
+            "checksum": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      }
+    },
+    "credential": {
+      "$ref": "common.schema.json#/$defs/credential"
+    }
+  }
+}

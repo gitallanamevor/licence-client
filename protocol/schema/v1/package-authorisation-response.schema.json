@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://licensing.zithis.example/protocol/v1/package-authorisation-response.schema.json",
+  "title": "package-authorisation response",
+  "oneOf": [
+    {
+      "$ref": "common.schema.json#/$defs/signedEnvelope"
+    },
+    {
+      "$ref": "common.schema.json#/$defs/errorEnvelope"
+    }
+  ]
+}

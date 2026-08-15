@@ -1,0 +1,123 @@
+{
+  "protocol_version": "1.0",
+  "authority": {
+    "id": "licensing.zithis.example",
+    "key_id": "fixture-2026-01",
+    "public_key": "authority/test-authority-public.pem"
+  },
+  "product": {
+    "code": "zithis",
+    "package_identifier": "zithis/zithis.php",
+    "installed_version": "1.1.27"
+  },
+  "installation": {
+    "id": "11111111-1111-4111-8111-111111111111",
+    "scope": "customer.example",
+    "environment": "production",
+    "canonical_uri": "https://customer.example"
+  },
+  "clock": "2026-08-02T14:00:00+00:00",
+  "cases": [
+    {
+      "id": "active",
+      "response": "responses/active.json",
+      "operation": "activate",
+      "request_id": "22222222-2222-4222-8222-222222222221",
+      "nonce": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "expected_success": true,
+      "expected_status": "active",
+      "expected_mode": "full"
+    },
+    {
+      "id": "validation-due",
+      "response": "responses/validation-due.json",
+      "operation": "validate",
+      "request_id": "22222222-2222-4222-8222-222222222231",
+      "nonce": "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV",
+      "expected_success": true,
+      "expected_status": "validation_due",
+      "expected_mode": "full"
+    },
+    {
+      "id": "grace",
+      "response": "responses/grace.json",
+      "operation": "validate",
+      "request_id": "22222222-2222-4222-8222-222222222232",
+      "nonce": "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+      "expected_success": true,
+      "expected_status": "grace",
+      "expected_mode": "continuity"
+    },
+    {
+      "id": "expired",
+      "response": "responses/expired.json",
+      "operation": "validate",
+      "request_id": "22222222-2222-4222-8222-222222222233",
+      "nonce": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "expected_success": true,
+      "expected_status": "expired",
+      "expected_mode": "restricted"
+    },
+    {
+      "id": "suspended",
+      "response": "responses/suspended.json",
+      "operation": "validate",
+      "request_id": "22222222-2222-4222-8222-222222222234",
+      "nonce": "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",
+      "expected_success": true,
+      "expected_status": "suspended",
+      "expected_mode": "blocked"
+    },
+    {
+      "id": "revoked",
+      "response": "responses/revoked.json",
+      "operation": "validate",
+      "request_id": "22222222-2222-4222-8222-222222222235",
+      "nonce": "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
+      "expected_success": true,
+      "expected_status": "revoked",
+      "expected_mode": "blocked"
+    },
+    {
+      "id": "deactivated",
+      "response": "responses/deactivated.json",
+      "operation": "deactivate",
+      "request_id": "22222222-2222-4222-8222-222222222223",
+      "nonce": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+      "expected_success": true,
+      "expected_status": "deactivated",
+      "expected_mode": "blocked"
+    },
+    {
+      "id": "update-available",
+      "response": "responses/update-available.json",
+      "operation": "update_check",
+      "request_id": "22222222-2222-4222-8222-222222222224",
+      "nonce": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",
+      "expected_success": true,
+      "expected_status": "active",
+      "expected_mode": "full",
+      "expected_update": "1.1.28"
+    },
+    {
+      "id": "update-current",
+      "response": "responses/update-current.json",
+      "operation": "update_check",
+      "request_id": "22222222-2222-4222-8222-222222222236",
+      "nonce": "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN",
+      "expected_success": true,
+      "expected_status": "active",
+      "expected_mode": "full",
+      "expected_update": null
+    },
+    {
+      "id": "package-authorisation",
+      "response": "responses/package-authorisation.json",
+      "operation": "package_authorisation",
+      "request_id": "22222222-2222-4222-8222-222222222225",
+      "nonce": "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+      "expected_success": true,
+      "expected_package": "release-zithis-1.1.28"
+    }
+  ]
+}

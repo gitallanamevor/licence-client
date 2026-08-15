@@ -1,0 +1,8 @@
+{
+  "failure": "transport_exception",
+  "exception": "RuntimeException",
+  "message": "timeout",
+  "expected_category": "transport",
+  "expected_code": "transport_failure",
+  "retryable": true
+}

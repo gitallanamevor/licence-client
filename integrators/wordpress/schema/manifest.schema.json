@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zithis.example/schema/standalone-wordpress-integrator-manifest-v2.json",
+  "title": "Zithis Standalone WordPress Integrator Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "product",
+    "namespace",
+    "authority",
+    "runtime"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": 2
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "name",
+        "package_identifier",
+        "homepage",
+        "minimum_php",
+        "minimum_wordpress",
+        "tested_wordpress"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,63}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "package_identifier": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*\\.php$"
+        },
+        "homepage": {
+          "type": "string",
+          "anyOf": [
+            {
+              "const": ""
+            },
+            {
+              "format": "uri"
+            }
+          ]
+        },
+        "minimum_php": {
+          "type": "string"
+        },
+        "minimum_wordpress": {
+          "type": "string"
+        },
+        "tested_wordpress": {
+          "type": "string",
+          "pattern": "^$|^\\d+\\.\\d+(?:\\.\\d+)?$"
+        }
+      }
+    },
+    "namespace": {
+      "type": "string",
+      "minLength": 5
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "key_id",
+        "public_key_file",
+        "allow_private_network",
+        "package_download_hosts",
+        "endpoints"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "key_id": {
+          "type": "string"
+        },
+        "public_key_file": {
+          "type": "string"
+        },
+        "package_download_hosts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 253
+          }
+        },
+        "endpoints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "activate",
+            "validate",
+            "deactivate",
+            "update_check",
+            "package_authorisation"
+          ],
+          "properties": {
+            "activate": {
+              "type": "string",
+              "format": "uri"
+            },
+            "validate": {
+              "type": "string",
+              "format": "uri"
+            },
+            "deactivate": {
+              "type": "string",
+              "format": "uri"
+            },
+            "update_check": {
+              "type": "string",
+              "format": "uri"
+            },
+            "package_authorisation": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "allow_private_network": {
+          "type": "boolean"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timeout",
+        "validation_retry_seconds",
+        "update_check_seconds",
+        "lock_seconds",
+        "admin_capability"
+      ],
+      "properties": {
+        "timeout": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 120
+        },
+        "validation_retry_seconds": {
+          "type": "integer",
+          "minimum": 300,
+          "maximum": 86400
+        },
+        "update_check_seconds": {
+          "type": "integer",
+          "minimum": 3600,
+          "maximum": 604800
+        },
+        "lock_seconds": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 900
+        },
+        "admin_capability": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        }
+      }
+    }
+  }
+}
