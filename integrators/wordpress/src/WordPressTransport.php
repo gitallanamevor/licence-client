@@ -18,6 +18,7 @@ final class WordPressTransport implements Transport
         private int $timeout,
         private AuthorityHttpPolicy $http
     ) {
+        $this->timeout = max(5, min($this->timeout, 30));
     }
 
     public function send(TransportRequest $request): TransportResponse

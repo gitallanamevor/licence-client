@@ -7,7 +7,7 @@ namespace Zithis\LicenceClient;
 final class ClientPackage
 {
     public const NAME = 'zithis/licence-client';
-    public const VERSION = '1.1.6';
+    public const VERSION = '1.1.7';
     public const PROTOCOL_VERSION = '1.0';
 
     /** @return list<string> */

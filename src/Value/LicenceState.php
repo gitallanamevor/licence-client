@@ -70,6 +70,27 @@ final class LicenceState
     public function runtimeMode(): RuntimeMode { return $this->runtimeMode; }
     public function requiresAction(): bool { return $this->requiresAction; }
 
+
+    public function equivalentTo(self $other): bool
+    {
+        $entitlements = $this->entitlements;
+        $otherEntitlements = $other->entitlements;
+        sort($entitlements, SORT_STRING);
+        sort($otherEntitlements, SORT_STRING);
+
+        return hash_equals($this->id, $other->id)
+            && $this->status === $other->status
+            && $entitlements === $otherEntitlements
+            && $this->termStartedAt->getTimestamp() === $other->termStartedAt->getTimestamp()
+            && $this->expiresAt->getTimestamp() === $other->expiresAt->getTimestamp()
+            && $this->validationDueAt->getTimestamp() === $other->validationDueAt->getTimestamp()
+            && $this->graceExpiresAt->getTimestamp() === $other->graceExpiresAt->getTimestamp()
+            && $this->activationLimits === $other->activationLimits
+            && $this->activationUsage === $other->activationUsage
+            && $this->runtimeMode === $other->runtimeMode
+            && $this->requiresAction === $other->requiresAction;
+    }
+
     public function hasEntitlement(string $entitlement): bool
     {
         return in_array(strtolower(trim($entitlement)), $this->entitlements, true);

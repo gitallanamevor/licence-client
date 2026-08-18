@@ -42,6 +42,14 @@ final class RequestFactoryTest extends TestCase
         $this->assertSame('customer.example', $payload['installation']['scope']);
         $this->assertSame('validate', $payload['operation']['name']);
         $this->assertSame(str_repeat('S', 43), $payload['credential']['activation_secret']);
+        $this->assertSame(
+            '33333333-3333-4333-8333-333333333333',
+            $request->headers()['X-Zithis-Activation'] ?? null
+        );
+        $this->assertFalse(
+            in_array(str_repeat('S', 43), $request->headers(), true),
+            'The activation secret must never be copied into transport headers.'
+        );
         $this->assertFalse(isset($payload['site']), 'The product-neutral request must not contain a site object.');
         $this->assertFalse(isset($payload['plugin']), 'The product-neutral request must not contain a plugin object.');
     }
@@ -117,6 +125,28 @@ final class RequestFactoryTest extends TestCase
         }
 
         $this->assertTrue(false, 'A JSON-list operation parameter payload must be rejected.');
+    }
+
+
+    public function testActivationRequestDoesNotSendActivationIdentityHeader(): void
+    {
+        $factory = new RequestFactory();
+        $request = $factory->create(
+            Operation::Activate,
+            new EndpointSet([
+                'activate' => 'https://licensing.zithis.example/v2/licences/activate',
+                'validate' => 'https://licensing.zithis.example/v2/licences/validate',
+                'deactivate' => 'https://licensing.zithis.example/v2/licences/deactivate',
+                'update_check' => 'https://licensing.zithis.example/v2/updates/check',
+                'package_authorisation' => 'https://licensing.zithis.example/v2/packages/authorise',
+            ]),
+            new Product('zithis', 'zithis/zithis.php', '1.1.27'),
+            new Installation('11111111-1111-4111-8111-111111111111', 'customer.example', 'production'),
+            new DateTimeImmutable('2026-08-02T14:00:00+00:00'),
+            ['licence_key' => 'ZITHIS-TEST-KEY']
+        );
+
+        $this->assertFalse(isset($request->headers()['X-Zithis-Activation']));
     }
 
 }

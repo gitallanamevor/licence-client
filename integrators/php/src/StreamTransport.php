@@ -13,6 +13,7 @@ final class StreamTransport implements Transport
 {
     public function __construct(private int $timeoutSeconds, private int $maximumResponseBytes)
     {
+        $this->timeoutSeconds = max(5, min($this->timeoutSeconds, 30));
     }
 
     public function send(TransportRequest $request): TransportResponse

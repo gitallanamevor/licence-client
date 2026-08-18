@@ -46,18 +46,20 @@ final class RequestFactory
                 'parameters' => $this->operationParameters($parameters),
             ],
         ];
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'User-Agent' => ClientPackage::NAME . '/' . ClientPackage::VERSION,
+        ];
         if ($credential !== null) {
             $payload['credential'] = $credential->toArray();
+            $headers['X-Zithis-Activation'] = $credential->id();
         }
 
         return new TransportRequest(
             $operation,
             $endpoints->for($operation),
-            [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'User-Agent' => ClientPackage::NAME . '/' . ClientPackage::VERSION,
-            ],
+            $headers,
             Json::encode($payload),
             $requestId,
             $nonce

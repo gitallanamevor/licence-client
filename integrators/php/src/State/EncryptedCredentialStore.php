@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Zithis\LicenceClient\Integrator\Php\State;
 
+use DateTimeImmutable;
 use RuntimeException;
 use Throwable;
 use Zithis\LicenceClient\Contract\Clock;
 use Zithis\LicenceClient\Contract\CredentialStore;
+use Zithis\LicenceClient\Contract\ValidationContactStore;
 use Zithis\LicenceClient\Integrator\Php\Configuration;
 use Zithis\LicenceClient\Protocol\Base64Url;
 use Zithis\LicenceClient\Runtime\LicenceStateCodec;
 use Zithis\LicenceClient\Value\ActivationCredential;
 use Zithis\LicenceClient\Value\StoredState;
 
-final class EncryptedCredentialStore implements CredentialStore
+final class EncryptedCredentialStore implements CredentialStore, ValidationContactStore
 {
     private const CONTRACT_VERSION = 1;
     private const CIPHER = 'aes-256-gcm';
@@ -83,7 +85,6 @@ final class EncryptedCredentialStore implements CredentialStore
         $this->files->write($this->directory->file('credential.bin'), $this->encrypt($payload));
         $this->state = $state;
         $this->resolved = true;
-        $this->metadata->markValidated($this->clock->now()->format(DATE_ATOM));
     }
 
     public function clear(string $productCode): void
@@ -93,6 +94,15 @@ final class EncryptedCredentialStore implements CredentialStore
         $this->metadata->clearLicenceMetadata();
         $this->state = null;
         $this->resolved = true;
+    }
+
+    public function markValidated(string $productCode, DateTimeImmutable $validatedAt): void
+    {
+        $this->assertProduct($productCode);
+        if (!$this->configured()) {
+            return;
+        }
+        $this->metadata->markValidated($validatedAt->format(DATE_ATOM));
     }
 
     public function recordValidationFailure(string $code, bool $temporary): void

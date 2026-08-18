@@ -12,6 +12,7 @@ use Zithis\LicenceClient\Contract\InstallationIdentity;
 use Zithis\LicenceClient\Contract\Logger;
 use Zithis\LicenceClient\Contract\ProductDescriptor;
 use Zithis\LicenceClient\Contract\Transport;
+use Zithis\LicenceClient\Contract\ValidationContactStore;
 use Zithis\LicenceClient\Enum\LogLevel;
 use Zithis\LicenceClient\Enum\Operation;
 use Zithis\LicenceClient\Exception\TransportFailure;
@@ -29,13 +30,23 @@ final class FixedClock implements Clock
     public function now(): DateTimeImmutable { return $this->now; }
 }
 
-final class ArrayCredentialStore implements CredentialStore
+final class ArrayCredentialStore implements CredentialStore, ValidationContactStore
 {
     /** @var array<string,StoredState> */
     private array $states = [];
+    public int $saveCount = 0;
+    public int $validationContactCount = 0;
     public function load(string $productCode): ?StoredState { return $this->states[$productCode] ?? null; }
-    public function save(string $productCode, StoredState $state): void { $this->states[$productCode] = $state; }
+    public function save(string $productCode, StoredState $state): void
+    {
+        ++$this->saveCount;
+        $this->states[$productCode] = $state;
+    }
     public function clear(string $productCode): void { unset($this->states[$productCode]); }
+    public function markValidated(string $productCode, DateTimeImmutable $validatedAt): void
+    {
+        ++$this->validationContactCount;
+    }
 }
 
 final class StaticInstallationIdentity implements InstallationIdentity

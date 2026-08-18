@@ -11,6 +11,7 @@ use Zithis\LicenceClient\Contract\InstallationIdentity;
 use Zithis\LicenceClient\Contract\Logger;
 use Zithis\LicenceClient\Contract\ProductDescriptor;
 use Zithis\LicenceClient\Contract\Transport;
+use Zithis\LicenceClient\Contract\ValidationContactStore;
 use Zithis\LicenceClient\Enum\ErrorCategory;
 use Zithis\LicenceClient\Enum\LogLevel;
 use Zithis\LicenceClient\Enum\Operation;
@@ -70,6 +71,7 @@ final class LicenceClient
                     $this->product->code(),
                     new StoredState($result->credential(), $result->licence())
                 );
+                $this->recordValidationContact();
             } catch (Throwable) {
                 return $this->failureForRequest($request, ErrorCategory::LocalState, 'credential_store_failed');
             }
@@ -158,11 +160,14 @@ final class LicenceClient
         );
         $result = $this->execute($request);
         if ($result->successful() && $result->licence() !== null && $operation !== Operation::Deactivate) {
+            $accepted = new StoredState($stored->credential(), $result->licence());
             try {
-                $this->store->save(
-                    $this->product->code(),
-                    new StoredState($stored->credential(), $result->licence())
-                );
+                if (!$stored->equivalentTo($accepted)) {
+                    $this->store->save($this->product->code(), $accepted);
+                }
+                if ($operation === Operation::Validate) {
+                    $this->recordValidationContact();
+                }
             } catch (Throwable) {
                 return $this->failureForRequest($request, ErrorCategory::LocalState, 'state_store_failed');
             }
@@ -246,6 +251,13 @@ final class LicenceClient
         );
 
         return $result;
+    }
+
+    private function recordValidationContact(): void
+    {
+        if ($this->store instanceof ValidationContactStore) {
+            $this->store->markValidated($this->product->code(), $this->clock->now());
+        }
     }
 
     private function localFailure(Operation $operation, string $code): OperationResult

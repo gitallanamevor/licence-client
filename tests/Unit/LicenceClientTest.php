@@ -140,6 +140,27 @@ final class LicenceClientTest extends TestCase
         $this->assertFalse(str_contains((string) $encoded, 'SUPER-SECRET-LICENCE-KEY'));
     }
 
+
+    public function testUnchangedAuthenticatedStateDoesNotForceAnotherEncryptedStateSave(): void
+    {
+        [$transport, $authority] = FixtureResponder::create();
+        $store = new ArrayCredentialStore();
+        $client = $this->client($transport, $authority, $store, new MemoryLogger());
+
+        $this->assertTrue($client->activate('ZITHIS-TEST-KEY-0001')->successful());
+        $this->assertSame(1, $store->saveCount);
+        $this->assertSame(1, $store->validationContactCount);
+
+        $result = $client->checkForUpdate();
+
+        $this->assertTrue($result->successful());
+        $this->assertSame(1, $store->saveCount, 'An unchanged update-check licence state must not be persisted again.');
+        $this->assertSame(1, $store->validationContactCount, 'Update checks must not refresh explicit validation-contact metadata.');
+
+        $this->assertTrue($client->validate()->successful());
+        $this->assertSame(2, $store->validationContactCount, 'Explicit validation must refresh validation-contact metadata.');
+    }
+
     private function client($transport, $authority, ArrayCredentialStore $store, MemoryLogger $logger): LicenceClient
     {
         return new LicenceClient(

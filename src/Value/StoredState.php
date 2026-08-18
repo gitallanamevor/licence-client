@@ -14,4 +14,11 @@ final class StoredState
 
     public function credential(): ActivationCredential { return $this->credential; }
     public function licence(): LicenceState { return $this->licence; }
+
+    public function equivalentTo(self $other): bool
+    {
+        return hash_equals($this->credential->id(), $other->credential->id())
+            && hash_equals($this->credential->secret(), $other->credential->secret())
+            && $this->licence->equivalentTo($other->licence);
+    }
 }

@@ -18,6 +18,12 @@ The protocol defines five explicit POST operations:
 
 Each operation has a language-neutral JSON Schema under `protocol/schema/v1`.
 
+### Validation-contact semantics
+
+`activate` establishes an accepted validation window and `validate` explicitly refreshes it. `update_check` and `package_authorisation` still perform authenticated current-state enforcement, but they do **not** refresh `last_validated_at`, `validation_due_at`, or the validation grace window. An update check therefore cannot silently postpone a validation that is due.
+
+For authenticated operations, the transport also sends the non-secret activation UUID in `X-Zithis-Activation` so LicenceServer can rate-limit by installation rather than shared IP alone. The activation secret is never sent in that header. `activate` has no activation UUID yet and remains eligible for IP-based throttling.
+
 ## Request envelope
 
 Every request separates these concerns:

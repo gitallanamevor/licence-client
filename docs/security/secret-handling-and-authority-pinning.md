@@ -55,3 +55,8 @@ Requests include a UUID, UTC timestamp, and cryptographically random nonce. Sign
 ## Repository hygiene
 
 `composer verify-security` checks the public tree for private key material, common credential formats, internal development artifacts, private environment domains, and local workstation paths. If a Git repository is present, it also checks whether removed internal artifacts remain reachable in Git history.
+
+
+## Rate-limit identity header
+
+Authenticated licence requests send `X-Zithis-Activation` containing only the non-secret activation UUID. This identifier may be used for per-installation throttling and diagnostics. The activation secret, licence key, package token, signed payload and Authorization credentials must never be copied into this header or equivalent diagnostic headers.

@@ -32,3 +32,14 @@ A retryable deactivation transport, protocol or server failure is ambiguous beca
 The maintained `Zithis\LicenceClient\Integrator\Php` runtime supplies a portable reference integration for Composer applications. It uses explicit configuration, native HTTPS streams, encrypted atomic file state, a shared installation UUID, one product lock and an application-invoked maintenance runner. Application boot never triggers a remote operation.
 
 The generic updater may discover and stage a verified ZIP only. Application-specific extraction, migration, process restart, release switching and rollback remain outside this package. Multi-node applications representing one installation must share the complete product state directory.
+
+
+## Validation contact and persistence semantics
+
+Protocol `1.0` keeps explicit validation semantics. Initial activation establishes the first accepted validation window and the explicit `validate` operation refreshes it. `update_check` and `package_authorisation` authenticate and enforce current licence state but do not refresh validation timestamps.
+
+`CredentialStore::save()` persists accepted credential/licence business state only. Integrators that expose validation-contact metadata implement the small `ValidationContactStore` extension; the core client marks it only after successful activation or explicit validation, including bounded validation used to reconcile an ambiguous deactivation response. The core client compares canonical logical `StoredState` values before calling `save()`, so a repeated authenticated operation whose accepted business state is unchanged does not force a new encrypted ciphertext write merely because encryption would generate a new IV.
+
+Authenticated requests carry the non-secret activation UUID in `X-Zithis-Activation` for fairer LicenceServer throttling. Activation secrets remain only in the signed/encrypted protocol body and must never be copied into diagnostic or rate-limit headers. Initial activation sends no activation identity header.
+
+Small JSON protocol transports use a bounded 5–30 second timeout profile. Package transfer keeps its separate long-transfer profile (at least 120 seconds for the maintained PHP integrator and 300 seconds for the maintained WordPress updater).
